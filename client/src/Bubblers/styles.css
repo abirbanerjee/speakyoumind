@@ -1,0 +1,12 @@
+.bubbler{
+    border: 1px solid blue;
+    display: inline-flex;
+    margin: 5px;
+    width: 20rem;
+    height: 10rem;
+}
+
+.bubblerHolder{
+    border: 1px solid black;
+    display: flex;
+}

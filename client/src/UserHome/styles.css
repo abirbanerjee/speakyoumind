@@ -1,0 +1,27 @@
+.bubble{
+    border: 1px solid black;
+    display: inline-block;
+    width: 200px;
+    margin: 2rem;
+    width: 20rem;
+    height: 15rem;
+}
+.bubbleHolder{
+    width: 80%;
+    display: inline-flexbox;
+    flex-direction: row;
+    border: 1px solid blue;
+    align-content: center;
+    margin: 10rem;
+    margin-top: 5px;
+}
+.username{
+    font-weight: bolder;
+    text-decoration: overline underline;
+    margin: 1%;
+}
+
+.bubbleContent{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+}
