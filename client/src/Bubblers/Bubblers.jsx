@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import {allusers} from '../APIRoutes';
 import './styles.css';
 import {useNavigate} from 'react-router-dom';
 export default function Bubblers() {
 const [user, setUser] = useState({});
 const [userList, setUserList] = useState([]);
 const [searchString, setSearchString] = useState('');
-const navigate = useNavigate();
+const [followList, setFollowList] = useState([]);
+const host = window.location.hostname;
+const navigate = useNavigate(); 
 const delay = ms => new Promise(
   resolve => setTimeout(resolve, ms)
 );
@@ -18,10 +19,13 @@ useEffect(
         if(token == null)
          navigate('/');
         const option = {headers:{token}};
-        const reply = await axios.get('http://localhost:3001', option);
+        const reply = await axios.get(`http://${host}:3001`, option);
         const currentuser = reply.data.user.username;
         setUser(reply.data.user);
-        const replyusers = await axios.get(allusers);
+        if(reply.data.user.following!==undefined){
+          setFollowList(reply.data.user.following);
+        }
+        const replyusers = await axios.get(`http://${host}:3001/allusers`);
         for (let i =0;i<replyusers.data.length;i++){          
           if(replyusers.data[i].username===currentuser){
             replyusers.data.splice(i,1);
@@ -40,22 +44,22 @@ useEffect(
     async function doFollow(e){
       const follower = user.username;
       const following = e.target.name;
-      await axios.post('http://localhost:3001/followfunct', {follower, following});
+      await axios.post(`http://${host}:3001/followfunct`, {follower, following});
     }
 
     async function doUnFollow(e){
       const follower = user.username;
       const following = e.target.name;
-      await axios.post('http://localhost:3001/unfollowfunct', {follower, following});
+      await axios.post(`http://${host}:3001/unfollowfunct`, {follower, following});
     }
 
     async function refreshUser(){
        const token = localStorage.getItem('token');
         const option = {headers:{token}};
-        const reply = await axios.get('http://localhost:3001', option);
+        const reply = await axios.get(`http://${host}:3001`, option);
         setUser(reply.data.user);
         const currentuser = user.username;
-        const replyusers = await axios.get(allusers);
+        const replyusers = await axios.get(`http://${host}:3001/allusers`);
         for (let i =0;i<replyusers.data.length;i++){          
           if(replyusers.data[i].username===currentuser){
             replyusers.data.splice(i,1);
@@ -83,7 +87,7 @@ useEffect(
                 else if(val.f_name.toLowerCase().includes(searchString.toLowerCase())){
                   return val;
                 }
-              }).map((val,key)=>(<div className='bubbler' key={key}>{val.f_name} {val.l_name}<br></br><a href={`/profile/${val.username}`}>@{val.username}</a>{user.following.indexOf(val.username)===-1?(<button name={val.username} onClick={(e)=>{doFollow(e); delay(1000); refreshUser();}}>Follow</button>):(<button name={val.username} onClick={(e)=>{doUnFollow(e); delay(1000);refreshUser();}}>Following</button>)}<img src={val.profilePicture} height='60px'/></div>))
+              }).map((val,key)=>(<div className='bubbler' key={key}>{val.f_name} {val.l_name}<br></br><a href={`/profile/${val.username}`}>@{val.username}</a>{followList.indexOf(val.username)===-1?(<button name={val.username} onClick={(e)=>{doFollow(e); delay(1000); refreshUser();}}>Follow</button>):(<button name={val.username} onClick={(e)=>{doUnFollow(e); delay(1000);refreshUser();}}>Following</button>)}<img src={val.profilePicture} height='60px'/></div>))
             }
         </div>
     </div>

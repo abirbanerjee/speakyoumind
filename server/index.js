@@ -4,6 +4,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const cors = require('cors');
+const path = require('path');
 const token_secret = process.env.TOKEN_SECRET;
 
 require('dotenv').config();

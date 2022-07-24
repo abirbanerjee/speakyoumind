@@ -5,9 +5,10 @@ import './styles.css'
 
 function PostCards({Post}) {
     const [followPosts, setFollowPosts] = useState([]);
+    const host = window.location.hostname;
     useEffect(
         ()=>{
-            axios.get(`http://localhost:3001/posts/${Post}`).then(reply=>{setFollowPosts(reply.data.reverse()); });
+            axios.get(`http://${host}:3001/posts/${Post}`).then(reply=>{setFollowPosts(reply.data.reverse()); });
         },[]
     )
   return (

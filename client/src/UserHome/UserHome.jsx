@@ -2,10 +2,10 @@ import React, {useState,useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';
-import {delRoute} from '../APIRoutes';
 import Loading from '../Loading_2.gif';
 import PostCards from '../PostCards/PostCards';
 export default function UserHome() {
+    const host = window.location.hostname;
     const [name, setName] = useState('');
     const [image, setImage] = useState(undefined);
     const [bubbles, setBubbles] = useState([]);
@@ -19,7 +19,7 @@ export default function UserHome() {
             const fetchReply= async()=>{
             const token = localStorage.getItem('token');
             const option = {headers:{token}};
-            const reply = await axios.get('http://localhost:3001', option);
+            const reply = await axios.get(`http://${host}:3001`, option);
             setFollowingList(reply.data.user.following);
             setName(`${reply.data.user.f_name} ${reply.data.user.l_name}`);
             setUsername(reply.data.user.username);
@@ -36,29 +36,29 @@ export default function UserHome() {
     }
     async function deletePost(e){
       const postid = e.target.name;
-      axios.post(delRoute, {postid});
+      axios.post(`http://${host}:3001/delPost`, {postid});
       const token = localStorage.getItem('token');
       const option = {headers:{token}};
-      const reply = await axios.get('http://localhost:3001', option);
+      const reply = await axios.get(`http://${host}:3001`, option);
       setBubbles(await reply.data.posts.reverse());
     }
 
     async function editPost(e){
       const postid = e.target.name;
       const editedPost = prompt('Enter new post', `${e.target.className}` );
-      axios.put('http://localhost:3001/editPost', {postid, editedPost});
+      axios.put(`http://${host}:3001/editPost`, {postid, editedPost});
       const token = localStorage.getItem('token');
       const option = {headers:{token}};
-      const reply = await axios.get('http://localhost:3001', option);
+      const reply = await axios.get(`http://${host}:3001`, option);
       setBubbles(await reply.data.posts.reverse());
 
     }
 
     async function handleNewBubble(){
-      axios.post('http://localhost:3001/createpost', {user:username, post:newbubble});
+      axios.post(`http://${host}:3001/createpost`, {user:username, post:newbubble});
       const token = localStorage.getItem('token');
       const option = {headers:{token}};
-      const reply = await axios.get('http://localhost:3001', option);
+      const reply = await axios.get(`http://${host}:3001`, option);
       setBubbles(await reply.data.posts.reverse());
       setNewbubble('');
       setNumofletters(0);
@@ -79,7 +79,7 @@ export default function UserHome() {
     {/* <div>{postsCreated.map(Post=>(<PostCards Post={Post}/>))}</div> */}
     <div>
     <h3>Bubbles by people you follow:</h3>
-      {followingList.map(Post=>(<PostCards Post={Post}/>))}</div>
+      {followingList!=undefined?(followingList.map(Post=>(<PostCards Post={Post}/>))):(<h4>You are not following anyone</h4>)}</div>
     </div>
   )
 }

@@ -13,7 +13,7 @@ function BrowseProfile() {
   const [search, setSeacrh] = useState('');
   const [followList, setFollowList] = useState([]);
   const[followUnfollow, setFollowUnfollow] =useState('');
-  
+  const host = window.location.hostname;
    useEffect(
     ()=>
     {  
@@ -23,7 +23,7 @@ function BrowseProfile() {
           navigate('/');
         }
         const option = {headers:{token}};
-        const reply = await axios.get('http://localhost:3001', option);
+        const reply = await axios.get(`http://${host}:3001/`, option);
         setCurrentUser(await reply.data.user);
         setFollowList(await reply.data.user.following);
         if (followList.indexof(profile.username)===-1){
@@ -36,8 +36,8 @@ function BrowseProfile() {
         
       fetchReply();
       
-      axios.get(`http://localhost:3001/profile/${userid}`).then(reply=>{setProfile(reply.data);});
-      axios.get(`http://localhost:3001/posts/${userid}`).then(reply=>{setBubbles(reply.data.reverse());});
+      axios.get(`http://${host}:3001/profile/${userid}`).then(reply=>{setProfile(reply.data);});
+      axios.get(`http://${host}:3001/posts/${userid}`).then(reply=>{setBubbles(reply.data.reverse());});
     },[]
     
   ) 
@@ -50,13 +50,13 @@ function BrowseProfile() {
 async function doFollow(e){
   const follower = currentUser.username;
   const following = profile.username;
-  await axios.post('http://localhost:3001/followfunct', {follower, following});
+  await axios.post(`http://${host}:3001/followfunct`, {follower, following});
 }
 
 async function doUnFollow(e){
   const follower = currentUser.username;
   const following = profile.username;
-  await axios.post('http://localhost:3001/unfollowfunct', {follower, following});
+  await axios.post(`http://${host}:3001/unfollowfunct`, {follower, following});
 }
 
 

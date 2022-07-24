@@ -3,22 +3,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import {host} from '../APIRoutes';
 import '../index.css'
 export default function Login() {
     const [username, setUsername] = useState('');
     const [userpass, setUserPass] = useState('');
+    const host = window.location.hostname;
     useEffect(()=>{
+      console.log(host);
       const token = localStorage.getItem('token');
       if(token !==null || undefined){
         const option = {headers:{token}};
-        axios.get(host, option).then(navigate('/userhome'));
+        axios.get(`http://${host}:3001`, option).then(navigate('/userhome'));
       }
     },[])
     const navigate = useNavigate();
     function doLogin(e){
         e.preventDefault();
-        axios.post('http://localhost:3001/login', {username:username, password:userpass}).then((reply)=>{
+        axios.post(`http://${host}:3001/login`, {username:username, password:userpass}).then((reply)=>{
      if(reply.data.status==='ok'){
         localStorage.setItem('token', reply.data.user.token);
         if(reply.data.user.profilePicture === undefined||null)

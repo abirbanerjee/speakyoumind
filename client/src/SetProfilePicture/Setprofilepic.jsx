@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 export default function Setprofilepic() {
+  const host = window.location.hostname;
   const [profilePic, setProfilePic] = useState([]);
   const [username, setUsername] = useState('');
   const navigate= useNavigate();
@@ -13,14 +14,14 @@ export default function Setprofilepic() {
         token
       }
     }
-    axios.get('http://localhost:3001/',options).then(reply=>{
+    axios.get(`http://${host}:3001/`,options).then(reply=>{
       setUsername(reply.data.user.username);
     });
   function setPic(){
     const reader = new FileReader();
     reader.onload = (e)=>{
       const pic = e.target.result;
-      axios.post('http://localhost:3001/updateProfilePhoto',{profilePicture:pic, username});      
+      axios.post(`http://${host}:3001/updateProfilePhoto`,{profilePicture:pic, username});      
     }
       reader.readAsDataURL(profilePic);
       navigate('/userhome');

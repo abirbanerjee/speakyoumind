@@ -9,6 +9,7 @@ const toastOptions={
     pauseOnHover: true,
 };
 export default function Register(){
+    const host = window.location.hostname;
     const navigate = useNavigate();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -26,7 +27,7 @@ export default function Register(){
             email,
             phone
         }
-        axios.post('http://localhost:3001/register', options).then(reply=>{
+        axios.post(`http://${host}:3001/register`, options).then(reply=>{
         if(reply.data.status==='ok'){    
          localStorage.setItem('token', reply.data.usertoken);navigate('/setprofilepic');
     }
